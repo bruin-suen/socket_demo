@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    客户端
+    <button id="btn">给服务端发送消息</button>
+</body>
+<script src="http://localhost:8088/socket.io/socket.io.js"></script>
+<script>
+    window.onload = function(){
+		// 和服务器建立连接
+		var socket = io('http://localhost:8088');
+
+
+    	var btn = document.getElementById('btn');
+
+    	btn.onclick = function(){
+    		// 客户端向服务器发送数据
+            socket.emit('news', {
+            	client: '我是客户端的数据'
+            })
+        }
+
+        // 监听服务器的广播
+        socket.on('toClient', function(data){
+            console.log(data.client);
+        });
+    }
+</script>
+</html>

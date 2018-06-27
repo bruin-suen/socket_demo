@@ -1,0 +1,22 @@
+{
+  "name": "socket_demo",
+  "version": "1.0.0",
+  "description": "socket.io学习",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/burin-suen/socket_demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/burin-suen/socket_demo/issues"
+  },
+  "homepage": "https://github.com/burin-suen/socket_demo#readme",
+  "dependencies": {
+    "socket.io": "^2.1.1"
+  }
+}
