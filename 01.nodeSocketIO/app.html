@@ -8,11 +8,11 @@
     客户端
     <button id="btn">给服务端发送消息</button>
 </body>
-<script src="http://localhost:8088/socket.io/socket.io.js"></script>
+<script src="http://192.168.200.42:8088/socket.io/socket.io.js"></script>
 <script>
     window.onload = function(){
 		// 和服务器建立连接
-		var socket = io('http://localhost:8088');
+		var socket = io('http://192.168.200.42:8088');
 
 
     	var btn = document.getElementById('btn');

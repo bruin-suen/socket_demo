@@ -1,15 +1,8 @@
-/**
- * ============================================
- *
- *
- *
- * ============================================
- */
 const http = require('http');
 const fs = require('fs');
 
 const app = http.createServer((req, res) => {
-	fs.readFile('./app.html', (err, data) => {
+	fs.readFile('./index.html', (err, data) => {
 
 		res.writeHead(200, {'Content-Type': 'text/html;chartset="utf-8"'});
 		res.end(data);
@@ -32,7 +25,8 @@ io.on('connection', socket => {
 		// 服务器给客户端群发信息
 		io.emit('toClient', {
 			ipv4: address,
-			client: data.client
+			client: data.client,
+			times: data.times
 		});
 	});
 });
