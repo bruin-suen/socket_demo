@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .chat-group{
+            position: relative;
+            height: 500px;
+            max-width: 400px;
+            margin: 30px auto;
+            border: 1px solid #eaeaea;
+            background-color: #fdfdfd;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 0 15px;
+        }
+        .input-group {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .chat-box {
+            position: relative;
+            margin: 25px 0;
+        }
+        .chat-name {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .chat{
+            position: relative;
+            display: inline-block;
+            padding: 2px 10px;
+            background-color: #fff;
+            border: 1px solid #e9e9e9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chat-group">
+                <div id="chatRow" class="chat-row">
+                    <!--  -->
+                </div>
+                <div id="chatBase" class="chat-base"></div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="input-group">
+                <input id="textInput" type="text" class="form-control">
+                <span class="input-group-btn">
+                    <button id="btn" class="btn btn-primary" type="button">发送</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="/jquery-1.11.3.min.js"></script>
+<script src="http://192.168.200.42:8088/socket.io/socket.io.js"></script>
+<script>
+	function getQueryString(name){
+		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if(r!=null)return  decodeURIComponent(r[2]); return '';
+	}
+    $(function(){
+    	var roomids = getQueryString('roomid');
+    	var usernames = getQueryString('name');
+    	if(roomids === '' || usernames === ''){
+    		return;
+        }
+		var chatRow = document.getElementById('chatRow');
+		var chatBase = document.getElementById('chatBase');
+
+		// 和服务器建立长链接
+		var socket = io.connect('http://192.168.200.42:8088/?roomid=' + roomids + '&name=' + usernames);
+
+
+		$('#btn').on('click', function(){
+			sendInfo();
+		});
+		$('#textInput').on('keydown', function(){
+			if(event.keyCode == 13){
+				sendInfo();
+			}
+        });
+
+		// 给服务器发送数据
+        var sendInfo = function(){
+			var vals = $('#textInput').val();
+			if(vals.trim().length <= 0){ return;}
+			$('#textInput').val('');
+			// 给服务器发消息
+			socket.emit('sendChat', {
+				message: vals
+			});
+        }
+
+
+		// 接收服务器广播
+		// socket.on事件监听放在click事件监听里面
+		// 每次click就会注册一个socket.on事件
+		// 因此接收的重复消息成倍增长
+		// 所以，socket.on事件一定要放在click事件的外面做监听。
+		socket.on('acceptChat', (data) => {
+			var username = data.username;
+			var roomid = data.roomid;
+			var message = data.message;
+
+			var divDom = document.createElement('div');
+			divDom.setAttribute('class', 'chat-box');
+			divDom.innerHTML = '<span class="chat-name">'+ username +'</span>' +
+				'<div class="chat">'+ message +'</div>';
+
+			chatRow.appendChild(divDom);
+
+			/**
+			 * scrollIntoView()可以在所有的HTML元素上调用，通过滚动浏览器窗口或某个容器元素，
+			 *    调用元素就可以出现在视窗中。如果给该方法传入true作为参数，或者不传入任何参数，那么
+			 *    窗口滚动之后会让调动元素顶部和视窗顶部尽可能齐平。如果传入false作为参数，调用元素
+			 *    会尽可能全部出现在视口中（可能的话，调用元素的底部会与视口的顶部齐平。）不过顶部
+			 *    不一定齐平
+			 */
+			chatBase.scrollIntoView(true);
+		});
+    });
+</script>
+</html>

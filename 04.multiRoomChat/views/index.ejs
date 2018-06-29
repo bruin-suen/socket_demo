@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+		<style>
+			.row > div{
+				margin-top: 15px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>socket.io实现多人多房间聊天室</h1>
+				</div>
+				<div class="col-xs-12 col-md-12">
+					<h4>请输入房间号：</h4>
+				</div>
+				<div class="col-xs-8 col-md-4">
+					<input id="textInput" type="number" class="form-control" value="1" />
+				</div>
+				<div class="col-xs-12 col-md-12">
+					<h4>请输入称呼：</h4>
+				</div>
+				<div class="col-xs-8 col-md-4">
+					<input id="username" type="text" class="form-control" />
+				</div>
+				<div class="col-xs-12 col-md-12">
+					<button id="btn" class="btn btn-primary">进入聊天室</button>
+				</div>
+			</div>
+		</div>
+
+	</body>
+	<script src="/jquery-1.11.3.min.js"></script>
+	<script>
+		$(function(){
+			$('#btn').on('click', function(){
+				var inpt = $('#textInput').val();
+				var username = $('#username').val();
+				if(inpt.trim().length <= 0){
+					alert('请输入房间号！')
+					return;
+				}
+				if(username.trim().length <= 0){
+					alert('请输入称呼！')
+					return;
+				}
+				location.href = '/chat?roomid=' + inpt + '&name=' + username;
+			});
+		});
+	</script>
+</html>
